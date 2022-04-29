@@ -2,6 +2,7 @@ package com.accelya.product.workstationmanagement.job.model;
 
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -11,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.time.Duration;
@@ -51,4 +54,9 @@ public class Job {
     @Column(name = "value")
     private Map<String, String> metadata;
     private Integer priority;
+
+    @OneToOne(mappedBy = "job", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private JobParameters jobParameters;
+
 }
