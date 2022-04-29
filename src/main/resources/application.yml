@@ -15,7 +15,7 @@ spring:
         generate_statistics: true
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
   jackson:
     serialization:
       write-durations-as-timestamps: false

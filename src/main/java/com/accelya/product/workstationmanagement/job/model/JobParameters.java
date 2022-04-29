@@ -1,6 +1,7 @@
 package com.accelya.product.workstationmanagement.job.model;
 
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,8 +32,10 @@ public class JobParameters {
     private Integer shipmentCount;
 
 
-    @OneToMany(mappedBy = "jobParameters")
+    @OneToMany(mappedBy = "jobParameters", cascade = CascadeType.ALL)
     private Set<ULD> uldList;
+
+    @OneToMany(mappedBy = "jobParameters", cascade = CascadeType.ALL)
     private List<Shipment> shipmentList;
     private String boardPoint;
     private String offPoint;
@@ -50,8 +53,7 @@ public class JobParameters {
     public LocalDateTime eta;
     public LocalDateTime ata;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "WJP_ID")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "WAJ_ID", referencedColumnName = "WAJ_ID")
     private Job job;
 }

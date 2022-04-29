@@ -55,8 +55,7 @@ public class Job {
     private Map<String, String> metadata;
     private Integer priority;
 
-    @OneToOne(mappedBy = "job", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "job")
     private JobParameters jobParameters;
 
 }
