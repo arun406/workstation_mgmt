@@ -1,0 +1,45 @@
+springdoc:
+  show-actuator: true
+spring:
+  application:
+    name: warehouse automation workstation planning
+  h2:
+    console.enabled: true
+  datasource:
+    #    url: jdbc:h2:file:C:\Users\arun.kandakatla\source\workstation_mgmt\wa
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+    jpa:
+      spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+  #  datasource:
+  #    driverClassName: oracle.jdbc.OracleDriver
+  #    initialization-mode: never
+  #    username: ${BATCH_DB_USERNAME:batch_apps1}
+  #    password: ${BATCH_DB_PASSWORD:batch_apps1}
+  #    url: jdbc:oracle:thin:@${BATCH_DB_IP:10.4.12.78}:${BATCH_DB_PORT:6517}:${BATCH_DB:coxxod12c}
+  jpa:
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        format_sql: true
+        generate_statistics: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  jackson:
+    serialization:
+      write-durations-as-timestamps: false
+server:
+  error:
+    include-message: always
+
+logging:
+  level:
+    com.accelya.product: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql: TRACE

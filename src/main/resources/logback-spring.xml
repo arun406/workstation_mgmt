@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <springProperty scope="context" name="NAME" source="spring.application.name"/>
+    <springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active"/>
+
+    <property name="LOGS" value="./logs"/>
+    <property name="APPLICATION_NAME" value="workstation-management"/>
+    <property name="AMQP_APP_ID" value="WS-MGMT"/>
+
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+    <appender name="Console"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %yellow(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="RollingFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/${NAME}_${ACTIVE_PROFILE}.log</file>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGS}/archived/spring-boot-logger-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <springProfile name="amqp">
+        <appender name="AMQP" class="org.springframework.amqp.rabbit.logback.AmqpAppender">
+            <layout>
+                <pattern><![CDATA[ %d %p %t [%c] - <%m>%n ]]></pattern>
+            </layout>
+            <addresses>localhost:5672</addresses>
+            <abbreviation>36</abbreviation>
+            <username>guest</username>
+            <password>guest</password>
+            <includeCallerData>false</includeCallerData>
+            <applicationId>${APPLICATION_NAME}</applicationId>
+            <routingKeyPattern>%property{applicationId}.%c.%p</routingKeyPattern>
+            <generateId>true</generateId>
+            <charset>UTF-8</charset>
+            <durable>true</durable>
+            <deliveryMode>PERSISTENT</deliveryMode>
+            <declareExchange>true</declareExchange>
+        </appender>
+        <root level="info">
+            <appender-ref ref="AMQP"/>
+        </root>
+    </springProfile>
+
+    <!-- LOG everything at INFO level -->
+    <root level="info">
+        <appender-ref ref="RollingFile"/>
+        <appender-ref ref="Console"/>
+    </root>
+
+</configuration>

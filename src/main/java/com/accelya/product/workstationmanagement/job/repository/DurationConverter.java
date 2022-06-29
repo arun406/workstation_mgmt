@@ -9,7 +9,9 @@ import java.time.temporal.ChronoUnit;
 public class DurationConverter implements AttributeConverter<Duration, Long> {
     @Override
     public Long convertToDatabaseColumn(Duration duration) {
-        return duration.toMinutes();
+        if (duration != null)
+            return duration.toMinutes();
+        return 0L;
     }
 
     @Override
